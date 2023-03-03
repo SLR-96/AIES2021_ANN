@@ -32,7 +32,7 @@ Since YOLO V4 has been optimized on DarkNet, here as well, it has been used as t
 #### B.	SSD
 The backbone used for this network is MobileNet V2. MobileNet V2 is one of the most efficient CNNs, providing great speed and accuracy for small datasets, and makes trial and error easier and less time consuming. The input image size is chosen to be 400*400. Batch size of 16 is chosen based on the maximum that the GPU can handle. Adam optimizer is used with its learning rate scheduled with cosine decay and warmup phases, starting from 1e-6 and going up to 0.01 in 2000 steps and then going down to 0 in the 20,000th step, as depicted in Fig. 1. The warmup phase in the beginning prevents early overfitting by keeping the learning rate low until all the dataset has been used for training at least once. The cosine decay phase lets the network learn effectively in the beginning then gradually decreases the learning rate to prevent overfitting or loss divergence. Swish is used as the activation function, which is like ReLU but smoothed in x=0 point, which avoids a singularity point and prevents saturation on negative inputs. Weighted smooth L1 is used as the loss function for localization and weighted sigmoid focal is used for classification, since focal loss functions are able to handle data imbalance. Finally, the network is trained in 20k steps, using the GPU provided by Google Colab.
 
-![image](https://user-images.githubusercontent.com/65850584/221653451-3a87e58f-4977-4124-a70b-d4a717a10b34.png)
+![image](https://user-images.githubusercontent.com/65850584/222807593-9b5ba74a-4b14-43cf-98cb-51775112fc9c.png)
 Fig. 1. Cosine decay learning rate with a warmup phase of 2k steps for training in 20k steps
 
 #### C.	CenterNet
@@ -66,13 +66,13 @@ Since the loss function used on the networks differ from each other, they cannot
 ![image](https://user-images.githubusercontent.com/65850584/221671676-5daf562e-8d51-4fbc-bed0-0c7f04c0f3b5.png)
 Fig. 3. Changes of loss during the training of YOLO V4
 
-![image](https://user-images.githubusercontent.com/65850584/221671727-487f4660-f29c-4317-b433-f43bd85f0347.png)
+![image](https://user-images.githubusercontent.com/65850584/222807998-176ba2a0-6257-48df-992d-a038bd52123b.png)
 Fig. 4. Changes of loss during the training of SSD
 
-![image](https://user-images.githubusercontent.com/65850584/221671789-77a44a69-f099-49fb-906a-013e56faacae.png)
+![image](https://user-images.githubusercontent.com/65850584/222808161-98b9558a-f181-43a4-8ba1-ca0d9d71ec46.png)
 Fig. 5. Changes of loss during the training of CenterNet
 
-![image](https://user-images.githubusercontent.com/65850584/221671945-59c3b55f-2356-4c70-907c-9b337a1d934c.png)
+![image](https://user-images.githubusercontent.com/65850584/222808765-34d19df6-d80f-4995-bf8a-297da4baca8a.png)
 Fig. 6. Changes of loss during the training of EfficientDet
 
 The loss changes of YOLO V4 and EfficientDet as depicted on Fig. 3 and Fig. 6, are very similar and might lead one to think they show similar results, while in fact as it shall be discussed, it’s quite the opposite. While YOLO V4 is very efficient in finding the global minimum quickly, EfficientDet gets stuck in a local minimum and cannot continue to learn.
@@ -103,16 +103,16 @@ Fig. 10. EfficientDet results. Image numbers from the top: 822, 139, 156, and 67
 #### B.	Classification of cropped boxes
 Since the architecture of the fully connected layers at the bottom of the model for both VGG16 and MobileNet V2 is created equally in this experiment, and since the batch size, optimizer, number of epochs, and the loss function are also the same for both models, their loss and accuracy changing behavior can be compared directly. Graphs of the loss changes are shown on Fig. 11 and Fig. 12, and changes of accuracy are shown on Fig. 13 and Fig. 14.
 
-![image](https://user-images.githubusercontent.com/65850584/221672801-6f88a262-2989-4f1f-92eb-2d8713aee69d.png)
+![image](https://user-images.githubusercontent.com/65850584/222809171-b7fcd20b-8853-4214-b4ca-663b490a6a8b.png)
 Fig. 11. Changes of train and validation loss during the training of MobileNet V2
 
-![image](https://user-images.githubusercontent.com/65850584/221672854-3d08a146-0e23-415e-97b9-b854cb522311.png)
+![image](https://user-images.githubusercontent.com/65850584/222809252-e8328c8b-0381-4a7b-abef-d0e7c0cf78d0.png)
 Fig. 12. Changes of train and validation loss during the training of VGG16
 
-![image](https://user-images.githubusercontent.com/65850584/221672918-d22429d8-e6e0-4c86-8816-c57b518f14a5.png)
+![image](https://user-images.githubusercontent.com/65850584/222809424-d3ba84cf-713e-43ba-bec2-661d24140ec8.png)
 Fig. 13. Changes of train and validation accuracy during the training of MobileNet V2
 
-![image](https://user-images.githubusercontent.com/65850584/221672994-e1b55617-7d32-4ee3-b6dd-47f3435ff1f6.png)
+![image](https://user-images.githubusercontent.com/65850584/222809500-c2e1651e-804f-44a5-97ab-177832f74a4d.png)
 Fig. 14. Changes of train and validation accuracy during the training of VGG16
 
 The reason for the difference between train and validation losses is mainly the more balanced data for training, since one class of the training data has been augmented, but the validation data is remained untouched. But it’s also a product of the low amount and quality of data which leads to overfitting, despite taking measures such as using a simple fully connected structure, using dropout layers, and setting a high batch size and a low learning rate.
@@ -126,12 +126,10 @@ TABLE III. CLASSIFICATION METRICS FOR MOBILENET V2 AND VGG16.
 
 From the F1 score obtained from the two models, it can be concluded that both networks show similarly good results. However, it is worth noting that the test F1 score obtained for the “mask worn incorrectly” class, reached its maximum at 0.59 only with the MobileNet V2 model, which means that this model architecture can better handle data imbalance.
 
-![image](https://user-images.githubusercontent.com/65850584/221673543-ec1dafaf-6426-4cd2-b26e-005c8f068229.png)
-![image](https://user-images.githubusercontent.com/65850584/221673559-0e19b124-d2e0-4091-81f4-104ade01f439.png)
+![image](https://user-images.githubusercontent.com/65850584/222809722-2acbf922-b9d2-486d-a7a2-5747f5b2462b.png)
 Fig. 15. Train and test data confusion matrix for MobileNet V2
 
-![image](https://user-images.githubusercontent.com/65850584/221675033-b1c44bd1-8783-42e2-92bb-a5794901fcda.png)
-![image](https://user-images.githubusercontent.com/65850584/221675059-bdbe0f01-c394-4bc0-a0c2-7af57a0f2280.png)
+![image](https://user-images.githubusercontent.com/65850584/222809785-813ebc42-5d29-4053-89ab-d076d4ac6dd6.png)
 Fig. 16. Train and test data confusion matrix for VGG16
 
 ### IV.	CONCLUSION
